@@ -12,7 +12,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <title>End Poverty Within 200 Years | The 2222 Project</title>
   <meta name="description" content="Nonprofit endowment to fund basic income for everyone by the year 2222.  You can help.">
-  <!--link rel="icon" type="image/png" href="images/favicon.png" -->
+  <link rel="icon" type="image/png" href="images/favicon.ico">
   <!-- link type="application/rss+xml" rel="alternate" href="/blog-feed" -->
 
   <!-- Style
@@ -30,7 +30,6 @@
     .title {
       margin-top: 8rem; 
       margin-bottom: 8rem; }
-
   </style>
 
   <!-- Compatibility with IE8
@@ -52,50 +51,106 @@
     <div class="row">
       <section class="six columns">
         <h4>What We Do</h4>
-        <p>We are attempting something that has never been done before: end poverty once and for all.
-        We won't see the completion of this project, but there's a good chance our great grandchildren
+        <p>We are attempting a completely new approach to ending poverty, by creating an endowment
+        that will grow very quickly for a very long period of time.  Every year we will distribute a
+        small percentage of assets, and give it directly to people in low-income neighborhoods,
+        no strings attached.  As the endowment grows, more and more people will benefit.</p>
+
+        <p>We won't see the completion of this project, but there's a good chance our great grandchildren
         will look back on this as the moment when something wonderful was created.</p>
-
-        <p>Our approach is to create an endowment and grow it very quickly, for a very long period of
-        time.  Every year we will distribute a small percentage of assets, and give it directly to
-        people in low-income neighborhoods, no strings attached.</p>
-
-        <p>As the endowment grows, more and more people will benefit.  If you contribute $10 today,
-        by the year 2222 we expect it will have grown enough to support one person for their entire
-        life.<p>
-
       </section>
 
       <section class="six columns">
         <h4>You Can Help</h4>
-        <p>We will be accepting donations soon, once our nonprofit registration is complete.  Please
-        check back again later, or <a href="http://twitter.com/2222project">follow us on twitter</a>
+        <p>If you give just $10 today, by the year 2222 we expect it will have grown enough to fully
+        support one person for their entire life.</p>
+
+        <p>We will begin accepting donations in late summer of 2016, once our nonprofit registration is
+        complete.  Please check back again later, or <a href="http://twitter.com/2222project">follow us on twitter</a>
         for updates.</p>
+
+        <p>In the meantime, if you'd like to
+        <a href="mailto:volunteer@2222project.org">volunteer</a> to help us get started, we'd love to
+        have you.  We're looking for everything from graphic designers to accountants to board members.</p>
+
       </section>
 
-      <section class="six columns">
-        <h4>Where We Operate</h4>
-        <p>We are initially focusing on the 13 largest US metropolitan areas.  With a combined
-        population of over 120 million people, these regions account for over one third of all 
-        the people the US.</p>
-           <ul>
-             <li>New York / Newark / Bridgeport</li>
-             <li>Los Angeles / Long Beach</li>
-             <li>Chicago / Naperville</li>
-             <li>Washington / Baltimore / Arlington</li>
-             <li>San Francisco / Oakland / San Jose</li>
-             <li>Boston / Worcester / Providence</li>
-             <li>Dallas / Ft. Worth</li>
-             <li>Philadelphia / Reading / Camden</li>
-             <li>Houston / The Woodlands</li>
-             <li>Miami / Ft. Lauderdale / Port St. Lucie</li>
-             <li>Atlanta / Athens / Clarke / Sandy Springs</li>
-             <li>Detroit / Warren / Ann Arbor</li>
-             <li>Seattle / Tacoma</li>
-           </ul>
-      </section>
     </div>
 
+    <div class="row">
+      <section class="u-full-width">
+        <h4>Where We Operate</h4>
+        <div style="u-full-width">
+          <div id="map" style="width: 100%; height: 400px;">
+          </div>
+        </div>
+        <script>
+          function initMap() {
+            var map_center = {lat: 38.5, lng: -96};
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 4,
+              scrollwheel: false,
+              disableDefaultUI: true,
+              center: map_center,
+              styles: [
+                { featureType: "administrative.locality",
+                  elementType: "labels",
+                  stylers: [ { visibility: "off" } ]
+                },
+                { featureType: "administrative.country",
+                  elementType: "labels",
+                  stylers: [ { visibility: "off" } ]
+                }]
+            });
+
+            var cities = [
+              { position: {lat: 40.7129925, lng: -74.0064963},  map: map, title: "New York" },
+              { position: {lat: 34.0537038, lng: -118.2430555}, map: map, title: "Los Angeles" },
+              { position: {lat: 41.8838915, lng: -87.6320121},  map: map, title: "Chicago" },
+              { position: {lat: 32.7599097, lng: -97.0315765},  map: map, title: "Dallas/Ft. Worth" },
+              { position: {lat: 29.7601545, lng: -95.3694539},  map: map, title: "Houston" },
+              { position: {lat: 38.8976805, lng: -77.0366666},  map: map, title: "Washington" },
+              { position: {lat: 39.9527613, lng: -75.1639632},  map: map, title: "Philadelphia" },
+              { position: {lat: 25.7277392, lng: -80.2339949},  map: map, title: "Miami" },
+              { position: {lat: 33.7488977, lng: -84.3905299},  map: map, title: "Atlanta" },
+              { position: {lat: 42.3604099, lng: -71.0581298},  map: map, title: "Boston" },
+              { position: {lat: 37.7793501, lng: -122.4188938}, map: map, title: "San Francisco" },
+              { position: {lat: 33.4488121, lng: -112.0771801}, map: map, title: "Phoenix" },
+              { position: {lat: 33.9806284, lng: -117.3757141}, map: map, title: "Riverside" },
+              { position: {lat: 42.3369826, lng: -83.0508881},  map: map, title: "Detroit" },
+              { position: {lat: 47.6038998, lng: -122.3299809}, map: map, title: "Seattle" },
+              { position: {lat: 44.9772876, lng: -93.2655749},  map: map, title: "Minneapolis" },
+              { position: {lat: 32.7123936, lng: -117.1604752}, map: map, title: "San Diego" },
+              { position: {lat: 27.9476212, lng: -82.4573066},  map: map, title: "Tampa" },
+              { position: {lat: 39.734715,  lng: -104.987147},  map: map, title: "Denver" },
+              { position: {lat: 38.6267605, lng: -90.1995212},  map: map, title: "St. Louis" },
+            ]
+
+            var bounds = new google.maps.LatLngBounds();
+            for (var i=0; i < cities.length; i++) {
+              new google.maps.Marker(cities[i]);
+              bounds.extend(new google.maps.LatLng(
+                cities[i].position.lat,
+                cities[i].position.lng));
+            }
+            map.fitBounds(bounds);
+
+            google.maps.event.addDomListener(window, 'resize',
+              function() {
+                map.setCenter(map_center);
+                map.fitBounds(bounds);
+              });
+          }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa18zOthIuvFifksu62lFDimaSYXIA5Ls&callback=initMap"></script>
+
+        <br>
+
+        <p>We are initially focusing on the twenty largest US metropolitan areas.  With a combined
+        population of over 110 million people, these regions account for one third of the people the US.</p>
+
+      </section>
+    </div>
 
     <div class="row">
       <section class="six columns">
