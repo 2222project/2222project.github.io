@@ -103,9 +103,12 @@ function geom(list) {
 
 <script>
 
-// What balance do we need in order to pay $120/y starting with a $1 donation,
+// What balance do we need in order to pay $12000/y starting with a $100 donation,
 // assuming we pay out 3% per year?
-var target_balance = 120 / 0.03
+var target_balance = 12000 / 100 / 0.03
+
+// How much do we have to pay in overhead?
+var overhead = 0.001
 
 // Simulate payout based on historical returns, for a given distribution rate.
 // Result is organized as payout[year][percentile]
@@ -118,13 +121,13 @@ function sim_payouts(payout_model) {
     var total_payout = 0
     var path = []
     for (var year=0; year < num_years; year++) {
-      var r = random_return() 
+      var r = random_return() - overhead
       var payout = payout_model(r, balance, year)
       balance = balance * r - payout
       total_payout = total_payout + payout
       var return_required = Math.exp(Math.log(target_balance / balance) / Math.max(2, 200 - year))
-      path.push(total_payout)
-//      path.push(payout)
+//      path.push(total_payout)
+      path.push(payout)
 //      path.push(return_required)
 //      path.push(balance)
     }
@@ -149,9 +152,11 @@ function sim_payouts(payout_model) {
   return result;
 }
 
-payouts_10 = sim_payouts(function(r,b,y) { return b * 0.015 })
+payouts_10 = sim_payouts(function(r,b,y) { return b * 0.010 })
 payouts_15 = sim_payouts(function(r,b,y) { return b * 0.015 })
-payouts_20 = sim_payouts(function(r,b,y) { return b * 0.015 })
+payouts_20 = sim_payouts(function(r,b,y) { return b * 0.020 })
+payouts_40 = sim_payouts(function(r,b,y) { return b * 0.040 })
+payouts_60 = sim_payouts(function(r,b,y) { return b * 0.060 })
 
 payouts_preferred_model = sim_payouts(
   function(r,b,y) {
@@ -184,7 +189,7 @@ payouts_preferred_model = sim_payouts(
   } )
 
 percentiles = [2, 5, 10, 25, 30, 50, 75, 90, 95, 98, "avg", "geom"]
-years = [50, 100, 150, 200, 250, 300]
+years = [50, 100, 150, 200]
 
 function lookup_cell(table, year, percentile) {
   var result
@@ -198,7 +203,7 @@ function lookup_cell(table, year, percentile) {
 }
 
 function format_cell(x) {
-  return Number(x.toPrecision(2))
+  return Number(x.toPrecision(4))
 }
 
 write_table("preferred model", years, percentiles,
@@ -221,6 +226,27 @@ write_table("reference (flat 1% annual + 2% annual)", years, percentiles,
   function(year,percentile) {
     return format_cell((lookup_cell(payouts_10, year, percentile) +
                         lookup_cell(payouts_20, year, percentile)) / 2)
+  })
+
+write_table("reference (flat 2% annual)", years, percentiles,
+  function(year) { return year },
+  function(percentile) { return percentile + " percentile" },
+  function(year,percentile) {
+    return format_cell(lookup_cell(payouts_20, year, percentile))
+  })
+
+write_table("reference (flat 4% annual)", years, percentiles,
+  function(year) { return year },
+  function(percentile) { return percentile + " percentile" },
+  function(year,percentile) {
+    return format_cell(lookup_cell(payouts_40, year, percentile))
+  })
+
+write_table("reference (flat 6% annual)", years, percentiles,
+  function(year) { return year },
+  function(percentile) { return percentile + " percentile" },
+  function(year,percentile) {
+    return format_cell(lookup_cell(payouts_60, year, percentile))
   })
 
 </script>
