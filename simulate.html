@@ -108,7 +108,7 @@ function geom(list) {
 var target_balance = 12000 / 100 / 0.03
 
 // How much do we have to pay in overhead?
-var overhead = 0.001
+var overhead_rate = 0.001
 
 // Simulate payout based on historical returns, for a given distribution rate.
 // Result is organized as payout[year][percentile]
@@ -121,13 +121,15 @@ function sim_payouts(payout_model) {
     var total_payout = 0
     var path = []
     for (var year=0; year < num_years; year++) {
-      var r = random_return() - overhead
+      var r = random_return()
       var payout = payout_model(r, balance, year)
-      balance = balance * r - payout
+      var payout_rate = payout / balance
+      balance = balance * (r - overhead_rate) - payout
       total_payout = total_payout + payout
       var return_required = Math.exp(Math.log(target_balance / balance) / Math.max(2, 200 - year))
 //      path.push(total_payout)
       path.push(payout)
+//      path.push(payout_rate)
 //      path.push(return_required)
 //      path.push(balance)
     }
