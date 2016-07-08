@@ -44,20 +44,30 @@
 /* For devices larger than 400px */
 @media (min-width: 400px) {
   .container {
-    width: 85%;
+    width: 90%;
     padding: 0; }
 }
 
-/* For devices larger than 750px */
-@media (min-width: 750px) {
+/* For devices larger than 550px allow two columns */
+@media (min-width: 550px) {
   .container {
-    width: 80%; }
+    width: 85%;
+    padding: 0; }
   .column,
   .columns {
     margin-left: 4%; }
   .column:first-child,
   .columns:first-child {
     margin-left: 0; }
+
+  .six.columns                    { width: 48%;            }
+  .one-half.column                { width: 48%; }
+}
+
+/* For devices larger than 750px allow three columns*/
+@media (min-width: 750px) {
+  .container {
+    width: 80%; }
 
   .one.column,
   .one.columns                    { width: 4.66666666667%; }
