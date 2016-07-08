@@ -31,7 +31,7 @@ var n_returns = sorted_returns.length
 
 // Generates a random return based on historical returns, with interpolation.
 // Also includes a little bit of extrapolation, to avoid biasing against extreme
-// returns..
+// returns.
 function random_return() {
   var r = Math.random() * n_returns - 0.5;
   var index = Math.floor(r)
@@ -104,8 +104,8 @@ function geom(list) {
 <script>
 
 // What balance do we need in order to pay $12000/y starting with a $100 donation,
-// assuming we pay out 3% per year?
-var target_balance = 12000 / 100 / 0.03
+// assuming we pay out 5% per year?
+var target_balance = 12000 / 100 / 0.05
 
 // How much do we have to pay in overhead?
 var overhead_rate = 0.001
@@ -127,8 +127,8 @@ function sim_payouts(payout_model) {
       balance = balance * (r - overhead_rate) - payout
       total_payout = total_payout + payout
       var return_required = Math.exp(Math.log(target_balance / balance) / Math.max(2, 200 - year))
-//      path.push(total_payout)
-      path.push(payout)
+      path.push(total_payout)
+//      path.push(payout)
 //      path.push(payout_rate)
 //      path.push(return_required)
 //      path.push(balance)
@@ -162,36 +162,38 @@ payouts_60 = sim_payouts(function(r,b,y) { return b * 0.060 })
 
 payouts_preferred_model = sim_payouts(
   function(r,b,y) {
-    var return_required = Math.exp(Math.log(target_balance / b) / Math.max(2, 200 - y))
+    var return_required = Math.exp(Math.log(target_balance / b) / Math.max(2, 200 - y));
     
-    var rampdown_rate
-    if (y > 0)   rampdown_rate = 1.030
-    if (y > 25)  rampdown_rate = 1.025
-    if (y > 50)  rampdown_rate = 1.020
-    if (y > 75)  rampdown_rate = 1.015
-    if (y > 100) rampdown_rate = 1.010
-    if (y > 125) rampdown_rate = 1.005
-    if (y > 150) rampdown_rate = 1.000
+    var nominal_rate = 0.015;
+    var rampdown_rate;
+    if (y > 0)   rampdown_rate = 1.040
+    if (y > 20)  rampdown_rate = 1.035
+    if (y > 40)  rampdown_rate = 1.030
+    if (y > 60)  rampdown_rate = 1.025
+    if (y > 80)  rampdown_rate = 1.020
+    if (y > 100) rampdown_rate = 1.015
+    if (y > 120) rampdown_rate = 1.010
+    if (y > 140) rampdown_rate = 1.005
+    if (y > 160) rampdown_rate = 1.000
 
-    var payout_rate
+    var payout_rate;
     if (return_required > rampdown_rate)
       payout_rate = Math.max(0.005, 0.015 - (return_required - rampdown_rate))
-    else if (return_required < 1)
-      payout_rate = 0.020
-    else if (return_required < 0.9)
-      payout_rate = 0.030
-    else if (return_required < 0.75)
-      payout_rate = 0.040
-    else if (return_required < 0.5)
-      payout_rate = 0.050
-    else
-      payout_rate = 0.015
+    else if (return_required < 0.60) payout_rate = nominal_rate + 0.040
+    else if (return_required < 0.65) payout_rate = nominal_rate + 0.035
+    else if (return_required < 0.70) payout_rate = nominal_rate + 0.030
+    else if (return_required < 0.75) payout_rate = nominal_rate + 0.025
+    else if (return_required < 0.80) payout_rate = nominal_rate + 0.020
+    else if (return_required < 0.85) payout_rate = nominal_rate + 0.015
+    else if (return_required < 0.90) payout_rate = nominal_rate + 0.010
+    else if (return_required < 0.95) payout_rate = nominal_rate + 0.005
+    else                             payout_rate = nominal_rate
 
     return b * payout_rate
   } )
 
 percentiles = [2, 5, 10, 25, 30, 50, 75, 90, 95, 98, "avg", "geom"]
-years = [50, 100, 150, 200]
+years = [0, 25, 50, 75, 100, 125, 150, 175, 200]
 
 function lookup_cell(table, year, percentile) {
   var result
