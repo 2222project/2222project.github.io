@@ -192,12 +192,12 @@ payouts_preferred_model = sim_payouts(
     return b * payout_rate
   } )
 
-percentiles = [2, 5, 10, 25, 30, 50, 75, 90, 95, 98, "avg", "geom"]
+percentiles = [2, 5, 10, 25, 30, 50, 75, 90, 95, 98, "arith", "geom"]
 years = [0, 25, 50, 75, 100, 125, 150, 175, 200]
 
 function lookup_cell(table, year, percentile) {
   var result
-  if (percentile == "avg")
+  if (percentile == "arith")
     result = average(table[year])
   else if (percentile == "geom")
     result = geom(table[year])
@@ -210,23 +210,29 @@ function format_cell(x) {
   return Number(x.toPrecision(4))
 }
 
+function format_percentile(x) {
+  if (x == "geom") return "geometric average";
+  if (x == "arith") return "arithmetic average";
+  return x + " percentile";
+}
+
 write_table("preferred model", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell(lookup_cell(payouts_preferred_model, year, percentile))
   })
 
 write_table("reference (flat 1.5% annual)", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell(lookup_cell(payouts_15, year, percentile))
   })
 
 write_table("reference (flat 1% annual + 2% annual)", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell((lookup_cell(payouts_10, year, percentile) +
                         lookup_cell(payouts_20, year, percentile)) / 2)
@@ -234,21 +240,21 @@ write_table("reference (flat 1% annual + 2% annual)", years, percentiles,
 
 write_table("reference (flat 2% annual)", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell(lookup_cell(payouts_20, year, percentile))
   })
 
 write_table("reference (flat 4% annual)", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell(lookup_cell(payouts_40, year, percentile))
   })
 
 write_table("reference (flat 6% annual)", years, percentiles,
   function(year) { return year },
-  function(percentile) { return percentile + " percentile" },
+  function(percentile) { return format_percentile(percentile) },
   function(year,percentile) {
     return format_cell(lookup_cell(payouts_60, year, percentile))
   })
