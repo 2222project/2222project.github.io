@@ -36,129 +36,60 @@
 
     <header class="header row">
 
-      <h1 class="title">End poverty by 2222</h1>
+      <h1 class="title">The 2222 Project<br>End poverty by 2222</h1>
     </header>
 
     <div class="row">
       <section class="one-half column">
         <h4>What We Do</h4>
         <p>We are creating an endowment to give cash directly to people who need it, with no strings
-        attached.  Donors can dedicate contributions to their particular community.</p>
+        attached.  Donors can focus their contributions on their particular community.  Donors can
+        also contribute on behalf of their school, company, congregation, or other group.</p>
 
-        <p>To meet our goal of eliminating poverty by the year 2222, we only need to start with $1
-        per person.</p>
+        <h4>Who We Are</h4>
+        <p>The 2222 Project was founded by Kim Burchett.  Kim is a senior engineering manager at
+        Google, a former managing director at Goldman Sachs, and a mother living in Brooklyn.  She's
+        currently putting together a strong board of directors to run the project.</p>
 
-      </section>
-
-      <section class="one-half column">
-        <h4>How It Works</h4>
-        <p>Our approach works because it's based on exponential growth and cash transfers.</p>
-
-        <p><b>Exponential growth</b>.  All our contributions go to fund an endowment which targets 5%
-        annual growth after inflation, which means impact is expected to double every 14 years or so.
-        We expect that a donation of $10 today will enable us to give $12,000 per year by 2222.</p>
-
-        <p><b>Cash transfers</b>.  Rigorous studies have proven that direct cash transfers are 
-        effective
-        [<a class="cite" href="http://www.cashlearning.org/english/home">1</a>,
-        <a class="cite" href="https://www.givedirectly.org/research-at-give-directly">2</a>,
-        <a class="cite" href="http://www.mdrc.org/news/press-release/new-findings-show-new-york-city%E2%80%99s-conditional-cash-transfer-initiative-reduced">3</a>],
-        because recipients are able to use them to buy whatever they most need.  And cash transfers
-        require very little staff to administer relative to the value provided, which allows the vast
-        majority of funds to go directly to the people who need it.</p>
-
-        <p><a class="button" href="details.html">Learn more</a></p>
-      </section>
-    </div>
-
-    <div class="row">
-
-      <section class="u-full-width">
-        <h4>Where We Focus</h4>
-        <div style="u-full-width">
-          <div id="map" style="width: 100%; height: 400px;">
-          </div>
-        </div>
-        <script>
-          function initMap() {
-            var map_center = {lat: 38.5, lng: -96};
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 4,
-              scrollwheel: false,
-              disableDefaultUI: true,
-              center: map_center,
-              styles: [
-                { featureType: "administrative.locality",
-                  elementType: "labels",
-                  stylers: [ { visibility: "off" } ]
-                },
-                { featureType: "administrative.country",
-                  elementType: "labels",
-                  stylers: [ { visibility: "off" } ]
-                }]
-            });
-
-            var cities = [
-              { position: {lat: 40.7129925, lng: -74.0064963},  map: map, title: "New York" },
-              { position: {lat: 34.0537038, lng: -118.2430555}, map: map, title: "Los Angeles" },
-              { position: {lat: 41.8838915, lng: -87.6320121},  map: map, title: "Chicago" },
-              { position: {lat: 32.7599097, lng: -97.0315765},  map: map, title: "Dallas/Ft. Worth" },
-              { position: {lat: 29.7601545, lng: -95.3694539},  map: map, title: "Houston" },
-              { position: {lat: 38.8976805, lng: -77.0366666},  map: map, title: "Washington" },
-              { position: {lat: 39.9527613, lng: -75.1639632},  map: map, title: "Philadelphia" },
-              { position: {lat: 25.7277392, lng: -80.2339949},  map: map, title: "Miami" },
-              { position: {lat: 33.7488977, lng: -84.3905299},  map: map, title: "Atlanta" },
-              { position: {lat: 42.3604099, lng: -71.0581298},  map: map, title: "Boston" },
-              { position: {lat: 37.7793501, lng: -122.4188938}, map: map, title: "San Francisco" },
-              { position: {lat: 33.4488121, lng: -112.0771801}, map: map, title: "Phoenix" },
-              { position: {lat: 33.9806284, lng: -117.3757141}, map: map, title: "Riverside" },
-              { position: {lat: 42.3369826, lng: -83.0508881},  map: map, title: "Detroit" },
-              { position: {lat: 47.6038998, lng: -122.3299809}, map: map, title: "Seattle" },
-              { position: {lat: 44.9772876, lng: -93.2655749},  map: map, title: "Minneapolis" },
-              { position: {lat: 32.7123936, lng: -117.1604752}, map: map, title: "San Diego" },
-              { position: {lat: 27.9476212, lng: -82.4573066},  map: map, title: "Tampa" },
-              { position: {lat: 39.734715,  lng: -104.987147},  map: map, title: "Denver" },
-              { position: {lat: 38.6267605, lng: -90.1995212},  map: map, title: "St. Louis" },
-            ]
-
-            var bounds = new google.maps.LatLngBounds();
-            for (var i=0; i < cities.length; i++) {
-              new google.maps.Marker(cities[i]);
-              bounds.extend(new google.maps.LatLng(
-                cities[i].position.lat,
-                cities[i].position.lng));
-            }
-            map.fitBounds(bounds);
-            map.getUiSettings().setScrollGesturesEnabled(false);
-
-            google.maps.event.addDomListener(window, 'resize',
-              function() {
-                map.setCenter(map_center);
-                map.fitBounds(bounds);
-              });
-          }
-        </script>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa18zOthIuvFifksu62lFDimaSYXIA5Ls&callback=initMap"></script>
-
-        <br>
-
-        <p>We are initially focusing on the twenty largest US metropolitan areas.  With a combined
-        population of over 110 million people, these regions account for one third of the people in the US.</p>
-
-      </section>
-    </div>
-
-    <div class="row">
-
-      <section class="two-thirds column">
-        <h4>We Need Your Help</h4>
         <p>We will begin accepting donations in late summer
         of 2016, once our nonprofit registration is complete.  Please check back again later, or
         <a href="http://twitter.com/2222project">follow us on twitter</a> for updates.  In the meantime,
         if you'd like to
         <a href="mailto:volunteer@2222project.org">volunteer</a> to help us get started, we'd love to
         have you.</p>
+
       </section>
+
+      <section class="one-half column">
+        <h4>How It Works</h4>
+        <p>Our approach is based on two powerful techniques: exponential growth and cash transfers.</p>
+
+        <p><b>Exponential growth</b>.  All our contributions go to fund an endowment that targets 5%
+        annual growth after inflation.  That means our impact will start out small, but should double
+        every 14 years or so.  We expect that a one-time contribution of $100 today will enable us to
+        award a total of $300 within 50 years, $5,000 within 100, and $2.5 million by 2222.
+        Exponential growth is the fuel that makes it feasible to actually end poverty within just a
+        few generations.</p>
+
+        <p><b>Cash transfers</b>.  Rigorous studies have proven that direct cash transfers are 
+        effective
+        [<a class="cite" href="http://www.mdrc.org/news/press-release/new-findings-show-new-york-city%E2%80%99s-conditional-cash-transfer-initiative-reduced">3</a>,
+        <a class="cite" href="http://www.cashlearning.org/english/home">1</a>,
+        <a class="cite" href="https://www.givedirectly.org/research-at-give-directly">2</a>] at
+        reducing the impact of poverty.  They enable recipients to use buy whatever they most need,
+        whether that be paying rent, buying food, repairing their car, or even starting a small
+        business.  Another key benefit of cash transfers is that they 
+        require very little staff to administer relative to the value provided.  That allows the vast
+        majority of funds to go directly to the people who need it.</p>
+
+      </section>
+    </div>
+
+    <div class="row">
+        <p><center><a class="button button-primary" href="details.html">Learn more</a></center></p>
+    </div>
+
+    <div class="row">
 
       <section class="one-third column">
         <h4>Contact Us</h4>
