@@ -190,6 +190,7 @@ payouts_preferred_model = sim_payouts(
     var payout_rate;
     if (return_required > rampdown_rate)
       payout_rate = Math.max(0.005, 0.015 - (return_required - rampdown_rate))
+/*
     else if (return_required < 0.60) payout_rate = nominal_rate + 0.040
     else if (return_required < 0.65) payout_rate = nominal_rate + 0.035
     else if (return_required < 0.70) payout_rate = nominal_rate + 0.030
@@ -198,6 +199,7 @@ payouts_preferred_model = sim_payouts(
     else if (return_required < 0.85) payout_rate = nominal_rate + 0.015
     else if (return_required < 0.90) payout_rate = nominal_rate + 0.010
     else if (return_required < 0.95) payout_rate = nominal_rate + 0.005
+*/
     else                             payout_rate = nominal_rate
 
     return b * payout_rate
