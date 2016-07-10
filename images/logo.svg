@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 20">
+ <g transform="scale(1.1, 1)">
+  <g transform="scale(-1, 1) translate(-22, 0)">
+   <text fill="#9c9" transform="translate(0, 18)" font-family="Helvetica, Arial, sans-serif" font-size="24" stroke-width="0">2</text>
+   <text fill="#9c9" transform="translate(9, 18)" font-family="Helvetica, Arial, sans-serif" font-size="24" stroke-width="0">2</text>
+  </g>
+  <g transform="scale(1, 1) translate(18, 0)">
+   <text fill="#080" transform="translate(0, 18)" font-family="Helvetica, Arial, sans-serif" font-size="24" stroke-width="0">2</text>
+   <text fill="#080" transform="translate(9, 18)" font-family="Helvetica, Arial, sans-serif" font-size="24" stroke-width="0">2</text>
+  </g>
+  <g>
+   <text fill="#666" transform="translate(45, 8)" font-family="Helvetica, Arial, sans-serif" font-size="7" stroke-width="0">The</text>
+   <text fill="#666" transform="translate(59, 8)" font-family="Helvetica, Arial, sans-serif" font-size="7.5" stroke-width="0">2222</text>
+   <text fill="#666" transform="translate(45, 18)" font-family="Helvetica, Arial, sans-serif" font-size="7.5" stroke-width="0">Project</text>
+  </g>
+ </g>
+</svg>
