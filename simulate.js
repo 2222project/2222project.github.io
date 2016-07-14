@@ -79,7 +79,7 @@ function average(list) {
   return sum / count
 }
 
-function geom(list) {
+function geometric_average(list) {
   var logs = 0;
   var count = 0;
   for (var i = 0; i < list.length; i++) {
@@ -98,11 +98,11 @@ var target_balance = 12000 / 100 / 0.05
 // How much do we have to pay in overhead?
 var overhead_rate = 0.001
 
-// Simulate payout based on historical returns, for a given distribution rate.
-// Result is organized as payout[year][percentile]
-function sim_payouts(payout_model) {
-  var num_years = 301
-  var num_paths = 5000
+var num_years = 201
+var num_paths = 5000
+
+// Simulate paths based on historical returns, for a given distribution rate.
+function simulate(payout_model) {
   var paths = []
   for (var i=0; i < num_paths; i++) {
     var balance = 1
@@ -115,26 +115,34 @@ function sim_payouts(payout_model) {
       balance = balance * (r - overhead_rate) - payout
       total_payout = total_payout + payout
       var return_required = Math.exp(Math.log(target_balance / balance) / Math.max(2, 200 - year))
-      path.push(total_payout)
-//      path.push(payout)
-//      path.push(payout_rate)
-//      path.push(return_required)
-//      path.push(balance)
+      path.push({
+        payout: payout,
+        total_payout: total_payout,
+        payout_rate: payout_rate,
+        return_required: return_required,
+        balance: balance,
+      });
     }
     paths.push(path)
   }
+  return paths;
+}
 
+function make_percentiles(paths, selector) {
   // Organize results by year instead of by path
   var result = []
   for (var year=0; year < num_years; year++) {
-    var payouts = []
+    var values = []
     for (var i=0; i < num_paths; i++) {
-      payouts.push(paths[i][year])
+      var value = paths[i][year][selector]
+      if (value == null)
+        throw "no value for selector '" + selector + "'";
+      values.push(value);
     }
-    payouts.sort(function(a,b) { return a-b })
+    values.sort(function(a,b) { return a-b })
     var percentiles = []
     for (var i=0; i < 100; i++) {
-      percentiles.push(payouts[i / 100 * num_paths])
+      percentiles.push(values[i / 100 * num_paths])
     }
     result.push(percentiles)
   }
@@ -142,106 +150,99 @@ function sim_payouts(payout_model) {
   return result;
 }
 
-function lookup_cell(table, year, percentile) {
-  var result
-  if (percentile == "arith")
-    result = average(table[year])
-  else if (percentile == "geom")
-    result = geom(table[year])
-  else
-    result = table[year][percentile]
-  return result
-}
+function write_percentiles(title, values, years, percentiles) {
+  var years = [25, 50, 75, 100, 125, 150, 175, 200];
+  var percentiles = [5, 10, 25, 50, 75, 90, 95, "arith", "geom"];
 
-function format_cell(x) {
-  return Number(x.toPrecision(4))
+  write_table(title, years, percentiles,
+    function(year) {
+      return year
+    },
+    function(percentile) {
+      if (percentile == "geom") return "geometric average";
+      if (percentile == "arith") return "arithmetic average";
+      return percentile + " percentile";
+    },
+    function(year, percentile) {
+      var x;
+      var style_begin = "";
+      var style_end = "";
+      if (percentile == "arith") {
+        x = average(values[year])
+        style_begin = "<i>";
+        style_end = "</i>";
+      }
+      else if (percentile == "geom") {
+        x = geometric_average(values[year])
+        style_begin = "<i>";
+        style_end = "</i>";
+      }
+      else {
+        x = values[year][percentile];
+        if (percentile == 50) {
+          style_begin = "<b>";
+          style_end = "</b>";
+        }
+      }
+      return style_begin + String(Number(x.toPrecision(4))) + style_end;
+    })
 }
-
-function format_percentile(x) {
-  if (x == "geom") return "geometric average";
-  if (x == "arith") return "arithmetic average";
-  return x + " percentile";
-}
-
 
 function run_simulation() {
 
-payouts_15 = sim_payouts(function(r,b,y) { return b * 0.015 })
-payouts_20 = sim_payouts(function(r,b,y) { return b * 0.020 })
-payouts_40 = sim_payouts(function(r,b,y) { return b * 0.040 })
-payouts_60 = sim_payouts(function(r,b,y) { return b * 0.060 })
-
-payouts_preferred_model = sim_payouts(
-  function(r,b,y) {
-    var return_required = Math.exp(Math.log(target_balance / b) / Math.max(2, 200 - y));
+function preferred_model(r,b,y) {
+  var return_required = Math.exp(Math.log(target_balance / b) / Math.max(2, 200 - y));
     
-    var nominal_rate = 0.015;
-    var rampdown_rate;
-    if (y > 0)   rampdown_rate = 1.040
-    if (y > 20)  rampdown_rate = 1.035
-    if (y > 40)  rampdown_rate = 1.030
-    if (y > 60)  rampdown_rate = 1.025
-    if (y > 80)  rampdown_rate = 1.020
-    if (y > 100) rampdown_rate = 1.015
-    if (y > 120) rampdown_rate = 1.010
-    if (y > 140) rampdown_rate = 1.005
-    if (y > 160) rampdown_rate = 1.000
+  var nominal_rate = 0.015;
+  var rampdown_rate;
+  if (y > 0)   rampdown_rate = 1.040
+  if (y > 20)  rampdown_rate = 1.035
+  if (y > 40)  rampdown_rate = 1.030
+  if (y > 60)  rampdown_rate = 1.025
+  if (y > 80)  rampdown_rate = 1.020
+  if (y > 100) rampdown_rate = 1.015
+  if (y > 120) rampdown_rate = 1.010
+  if (y > 140) rampdown_rate = 1.005
+  if (y > 160) rampdown_rate = 1.000
 
-    var payout_rate;
-    if (return_required > rampdown_rate)
-      payout_rate = Math.max(0.005, 0.015 - (return_required - rampdown_rate))
+  var payout_rate;
+  if (return_required > rampdown_rate)
+    payout_rate = Math.max(0.005, 0.015 - (return_required - rampdown_rate))
+  else
+    payout_rate = nominal_rate
+
+  return b * payout_rate
+}
+
+document.write("<h1>Model: up to 1.5% as long as returns keep pace</h1>");
+
+paths = simulate(preferred_model)
+write_percentiles("annual payout",     make_percentiles(paths, "payout"))
+write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
+write_percentiles("balance",           make_percentiles(paths, "balance"))
+
+document.write("<h1>Model: 1.5% always</h1>");
+
+paths = simulate(function(r,b,y) { return b * 0.015 })
+write_percentiles("annual payout",     make_percentiles(paths, "payout"))
+write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
+write_percentiles("balance",           make_percentiles(paths, "balance"))
+
 /*
-    else if (return_required < 0.60) payout_rate = nominal_rate + 0.040
-    else if (return_required < 0.65) payout_rate = nominal_rate + 0.035
-    else if (return_required < 0.70) payout_rate = nominal_rate + 0.030
-    else if (return_required < 0.75) payout_rate = nominal_rate + 0.025
-    else if (return_required < 0.80) payout_rate = nominal_rate + 0.020
-    else if (return_required < 0.85) payout_rate = nominal_rate + 0.015
-    else if (return_required < 0.90) payout_rate = nominal_rate + 0.010
-    else if (return_required < 0.95) payout_rate = nominal_rate + 0.005
+document.write("<h1>Model: 4% always</h1>");
+
+paths = simulate(function(r,b,y) { return b * 0.040 })
+write_percentiles("annual payout",     make_percentiles(paths, "payout"))
+write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
+write_percentiles("balance",           make_percentiles(paths, "balance"))
+
+document.write("<h1>Model: 6% always</h1>");
+
+paths = simulate(function(r,b,y) { return b * 0.060 })
+write_percentiles("annual payout",     make_percentiles(paths, "payout"))
+write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
+write_percentiles("balance",           make_percentiles(paths, "balance"))
 */
-    else                             payout_rate = nominal_rate
-
-    return b * payout_rate
-  } )
-
-percentiles = [2, 5, 10, 25, 30, 50, 75, 90, 95, 98, "arith", "geom"]
-years = [0, 25, 50, 75, 100, 125, 150, 175, 200]
-
-write_table("preferred model", years, percentiles,
-  function(year) { return year },
-  function(percentile) { return format_percentile(percentile) },
-  function(year,percentile) {
-    return format_cell(lookup_cell(payouts_preferred_model, year, percentile))
-  })
-
-write_table("reference (flat 1.5% annual)", years, percentiles,
-  function(year) { return year },
-  function(percentile) { return format_percentile(percentile) },
-  function(year,percentile) {
-    return format_cell(lookup_cell(payouts_15, year, percentile))
-  })
-
-write_table("reference (flat 2% annual)", years, percentiles,
-  function(year) { return year },
-  function(percentile) { return format_percentile(percentile) },
-  function(year,percentile) {
-    return format_cell(lookup_cell(payouts_20, year, percentile))
-  })
-
-write_table("reference (flat 4% annual)", years, percentiles,
-  function(year) { return year },
-  function(percentile) { return format_percentile(percentile) },
-  function(year,percentile) {
-    return format_cell(lookup_cell(payouts_40, year, percentile))
-  })
-
-write_table("reference (flat 6% annual)", years, percentiles,
-  function(year) { return year },
-  function(percentile) { return format_percentile(percentile) },
-  function(year,percentile) {
-    return format_cell(lookup_cell(payouts_60, year, percentile))
-  })
 
 }
 
