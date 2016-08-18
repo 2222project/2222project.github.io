@@ -4,8 +4,8 @@
 
 /* Titles
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-h1 {
-  margin-top: 8rem; 
+header {
+  margin-top: 7rem; 
   margin-bottom: 8rem;
   text-align: center;
 }
@@ -52,6 +52,7 @@ nav ul li a {
 nav ul li.logo a {
     padding-left: 0;
 }
-nav ul li a:hover:not(.active) {
+nav ul li a:hover {
     text-decoration: underline;
 }
+
