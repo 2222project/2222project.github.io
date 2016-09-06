@@ -31,7 +31,6 @@
         <li class="logo"><a href="/"><img src="images/logo.svg"></a></li>
         <li><a href="details.html">Details</a></li>
         <li class="active"><a href="donate.html">Donate</a></li>
-        <li><a href="/">About</a></li>
       </ul>
     </nav>
 
@@ -40,157 +39,82 @@
     </header>
 
     <div class="row">
-
       <section class="u-full-width">
-        <h4>Your gift will help people in your community.</h5>
+        <h4>Thank you for contributing!</h4>
+      </section>
+    </div>
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="monthly" value="y" checked> Monthly</input>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="monthly" value="y">         One-time</input>
+    <div class="row">
+      <section class="u-full-width">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="monthly" id="monthly"  value="y" onchange="updateVisibility()" checked> Monthly
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="monthly" id="one_time" value="y" onchange="updateVisibility()">         One-time
         <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; $<input type="number" name="quantity" value="10" style="width: 7em"></input>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="endowment" value="y" checked> Add to the 2222 endowment</input>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="endowment" value="n">         Spend it all now</input>
-
-        <script src="donate.js" async defer></script>
-        <p>
-        If you sustain this contribution for 2 years then you will have donated a total of
-        $<script>document.write(numberWithCommas(240))</script>,
-        and enabled us to distribute about three times that much over the next fifty years.
-        Within 100 years your total impact will likely have grown to 
-        $<script>document.write(numberWithCommas(9180))</script>,
-        and by the year 2222 to
-        $<script>document.write(numberWithCommas(1220000))</script>
-        in inflation-adjusted 2016 dollars.
-
-<!--
-        <script> var extrapolation = extrapolate_monthly_contribution(10, 1)
-          for (var year=10; year <= 200; year = year + 10)
-            document.write(year, ": ", Number(extrapolation[year].total_payout.toPrecision(3)), "<br>")
-          </script>
--->
-
-        <br><br>
+        <span id="input_monthly">
+          &nbsp;&nbsp;&nbsp;&nbsp; $<input type="number" name="quantity" value="10" id="amount_monthly" style="width: 7em" oninput="updateProjectionsMonthly()">
+          <br>
+        </span>
+        <span id="input_one_time" style="display:none">
+          &nbsp;&nbsp;&nbsp;&nbsp; $<input type="number" name="quantity" value="100" id="amount_one_time" style="width: 7em" oninput="updateProjectionsOneTime()">
+          <br>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="endowment" id="endowment" value="y" onchange="updateVisibility()" checked> Make a lasting impact </input>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="endowment" id="immediate" value="n" onchange="updateVisibility()">         Spend it all now </input>
       </section>
 
-    </div>
-    <div class="row">
-
       <section class="u-full-width">
-        <h4>Where do you want to help?</h4>
+        <div id="projections_monthly">
+          <br>
+          If you sustain this contribution for 2 years, you will have donated a total of
+          $<span id="total_contrib_monthly">240</span>.
+          We estimate that would enable us to distribute 
+          $<span id="immed_monthly">3.42</span>
+          per year, doubling about every 14 years, to
+          $<span id="by2222_monthly">1,630,000</span>
+          per year after 200 years (in inflation-adjusted 2016 dollars).
+        </div>
+        <div style="display:none" id="projections_one_time">
+          <br>
+          We estimate your contribution will enable us to distribute 
+          $<span id="immed_one_time">1.49</span>
+          per year, doubling about every 14 years, to
+          $<span id="by2222_one_time">691,000</span>
+          per year after 200 years (in inflation-adjusted 2016 dollars).
+        </div>
 
-        <select>
-          <option selected> Anywhere in the US </option>
-          <option> Alabama </option>
-          <option> Alaska </option>
-          <option> Arkansas </option>
-          <option> California </option>
-          <option> Colorado </option>
-          <option> Connecticut </option>
-          <option> Florida </option>
-          <option> Georgia </option>
-          <option> Hawaii </option>
-          <option> Kansas </option>
-          <option> Kentucky </option>
-          <option> Idaho </option>
-          <option> Illinois </option>
-          <option> Louisiana </option>
-          <option> Maine </option>
-          <option> Massachusetts </option>
-          <option> Maryland </option>
-          <option> Michigan </option>
-          <option> Mississippi </option>
-          <option> Missouri </option>
-          <option> Nebraska </option>
-          <option> Nevada </option>
-          <option> New Hampshire </option>
-          <option> New Jersey </option>
-          <option> New Mexico </option>
-          <option> New York </option>
-          <option> North Carolina </option>
-          <option> North Dakota </option>
-          <option> Ohio </option>
-          <option> Oregon </option>
-          <option> Pennsylvania </option>
-          <option> Rhode Island </option>
-          <option> South Carolina </option>
-          <option> South Dakota </option>
-          <option> Tennessee </option>
-          <option> Texas </option>
-          <option> Utah </option>
-          <option> Washington State </option>
-          <option> Washington DC </option>
-          <option> West Virginia </option>
-          <option> Wyoming </option>
-          <option> Vermont </option>
-          <option> Virginia </option>
-        </select>
-
-<!--
-        <input id="map-input" class="controls" type="text" placeholder="Enter a location">
-        <div style="width:100%; height:400px" id="map">map</div>
-
+        <script src="donate.js" async defer></script>
         <script>
-          function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-              center: {lat: 40.7589121, lng: -73.9852763},
-              zoom: 11
-            });
-
-            var input = document.getElementById('map-input');
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo('bounds', map);
-
-            var infowindow = new google.maps.InfoWindow();
-            var marker = new google.maps.Marker({
-              map: map,
-              anchorPoint: new google.maps.Point(0, -29)
-            });
-
-            autocomplete.addListener('place_changed', function() {
-              infowindow.close();
-              marker.setVisible(false);
-              var place = autocomplete.getPlace();
-
-              if (!place.geometry) {
-                return;
-              }
-
-              // If the place has a geometry, then present it on a map.
-              if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-              } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-              }
-              marker.setIcon({
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(35, 35)
-              });
-              marker.setPosition(place.geometry.location);
-              marker.setVisible(true);
-
-              var address = '';
-              if (place.address_components) {
-                address = [
-                  (place.address_components[0] && place.address_components[0].short_name || ''),
-                  (place.address_components[1] && place.address_components[1].short_name || ''),
-                  (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-              }
-
-              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-              infowindow.open(map, marker);
-            });
+          function updateVisibility() {
+            var is_monthly   = document.getElementById("monthly").checked;
+            var is_one_time  = document.getElementById("one_time").checked;
+            var is_endowment = document.getElementById("endowment").checked;
+            document.getElementById("projections_monthly").style.display  = (is_monthly  && is_endowment) ? "block" : "none";
+            document.getElementById("projections_one_time").style.display = (is_one_time && is_endowment) ? "block" : "none";
+            document.getElementById("input_monthly").style.display  = is_monthly  ? "block" : "none";
+            document.getElementById("input_one_time").style.display = is_one_time ? "block" : "none";
           }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa18zOthIuvFifksu62lFDimaSYXIA5Ls&libraries=places&callback=initMap" async defer></script>
--->
 
+          function updateProjectionsMonthly() {
+            var amount = Number(document.getElementById("amount_monthly").value);
+            var projection = project_monthly_contribution(amount, 2);
+            document.getElementById("total_contrib_monthly").innerHTML = numberWithCommas(Number(projection[200].total_contribution));
+            document.getElementById("immed_monthly").innerHTML = numberWithCommas(Number(projection[1].payout.toPrecision(3)));
+            document.getElementById("by2222_monthly").innerHTML = numberWithCommas(Number(projection[200].payout.toPrecision(3)));
+          }
+
+          function updateProjectionsOneTime() {
+            var amount = Number(document.getElementById("amount_one_time").value);
+            var projection = project_one_time_contribution(amount);
+            document.getElementById("immed_one_time").innerHTML = numberWithCommas(Number(projection[1].payout.toPrecision(3)));
+            document.getElementById("by2222_one_time").innerHTML = numberWithCommas(Number(projection[206].payout.toPrecision(3)));
+          }
+
+          updateVisibility();
+          updateProjectionsMonthly();
+          updateProjectionsOneTime();
+        </script>
+
+        <br>
+        <br>
       </section>
 
     </div>
