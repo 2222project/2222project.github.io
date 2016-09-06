@@ -19,6 +19,16 @@ for (var i=0; i < returns.length; i++) {
   returns[i] = returns[i] / 100 + 1
 }
 
+// What balance do we need in order to pay $12000/y starting with a $100 donation,
+// assuming we pay out 5% per year?
+var target_balance = 12000 / 100 / 0.05
+
+// How much do we have to pay in overhead?
+var overhead_rate = 0.001
+
+var num_years = 201
+var num_paths = 5000
+
 var sorted_returns = returns.slice().sort(function(a,b) { return a-b })
 var n_returns = sorted_returns.length
 
@@ -91,16 +101,6 @@ function geometric_average(list) {
   return Math.exp(logs / count)
 }
 
-// What balance do we need in order to pay $12000/y starting with a $100 donation,
-// assuming we pay out 5% per year?
-var target_balance = 12000 / 100 / 0.05
-
-// How much do we have to pay in overhead?
-var overhead_rate = 0.001
-
-var num_years = 201
-var num_paths = 5000
-
 // Simulate paths based on historical returns, for a given distribution rate.
 function simulate(payout_model) {
   var paths = []
@@ -115,11 +115,13 @@ function simulate(payout_model) {
       balance = balance * (r - overhead_rate) - payout
       total_payout = total_payout + payout
       var return_required = Math.exp(Math.log(target_balance / balance) / Math.max(2, 200 - year))
+      var return_so_far = Math.exp(Math.log(balance) / (year+1))
       path.push({
         payout: payout,
         total_payout: total_payout,
         payout_rate: payout_rate,
         return_required: return_required,
+        return_so_far: return_so_far,
         balance: balance,
       });
     }
@@ -192,41 +194,39 @@ function run_simulation() {
 
 function preferred_model(r,b,y) {
   var return_required = Math.exp(Math.log(target_balance / b) / Math.max(2, 200 - y));
-    
-  var nominal_rate = 0.015;
-  var rampdown_rate;
-  if (y > 0)   rampdown_rate = 1.040
-  if (y > 20)  rampdown_rate = 1.035
-  if (y > 40)  rampdown_rate = 1.030
-  if (y > 60)  rampdown_rate = 1.025
-  if (y > 80)  rampdown_rate = 1.020
-  if (y > 100) rampdown_rate = 1.015
-  if (y > 120) rampdown_rate = 1.010
-  if (y > 140) rampdown_rate = 1.005
-  if (y > 160) rampdown_rate = 1.000
+  var return_so_far = Math.exp(Math.log(b) / (y+1));
+
+  var minimum_rate = 0.005;
+  var target_rate = 0.015;
 
   var payout_rate;
-  if (return_required > rampdown_rate)
-    payout_rate = Math.max(0.005, 0.015 - (return_required - rampdown_rate))
+  if (return_so_far < 1.06 && return_required > 1.02)
+    payout_rate = minimum_rate;
   else
-    payout_rate = nominal_rate
+    payout_rate = target_rate;
 
-  return b * payout_rate
+  payout_rate = minimum_rate;
+
+  return b * payout_rate;
 }
 
-document.write("<h1>Model: up to 1.5% as long as returns keep pace</h1>");
-
-paths = simulate(preferred_model)
-write_percentiles("annual payout",     make_percentiles(paths, "payout"))
-write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
-write_percentiles("balance",           make_percentiles(paths, "balance"))
-
-document.write("<h1>Model: 1.5% always</h1>");
+document.write("<h1>Model: distribute 1.5% every year</h1>");
 
 paths = simulate(function(r,b,y) { return b * 0.015 })
 write_percentiles("annual payout",     make_percentiles(paths, "payout"))
 write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
 write_percentiles("balance",           make_percentiles(paths, "balance"))
+write_percentiles("return so far",     make_percentiles(paths, "return_so_far"))
+
+document.write("<h1>Model: distribute 0.5-1.5% depending on actual returns</h1>");
+
+paths = simulate(preferred_model)
+write_percentiles("annual payout",     make_percentiles(paths, "payout"))
+write_percentiles("cumulative payout", make_percentiles(paths, "total_payout"))
+write_percentiles("balance",           make_percentiles(paths, "balance"))
+write_percentiles("payout rate",       make_percentiles(paths, "payout_rate"))
+write_percentiles("return required",   make_percentiles(paths, "return_required"))
+write_percentiles("return so far",     make_percentiles(paths, "return_so_far"))
 
 /*
 document.write("<h1>Model: 4% always</h1>");
